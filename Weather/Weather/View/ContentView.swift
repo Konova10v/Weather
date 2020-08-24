@@ -13,17 +13,11 @@ struct ContentView: View {
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     @ObservedObject var sevemDaysVM: SevenDaysWeatherViewModel
     @State var selected = 0
-    
-     @State private var weather =  WeatherData(id: 1, day: "Monday", weatherIcon: "sun.max", currentTemp: "50", minTemp:"52", maxTemp: "69", color: "mainCard")
-    @State var weathers: WeatherDays = WeatherDays.getDefault()
-    
-    
+    @State var weathers: TempStructure = TempStructure.getDefault()
     @State private var showDatail = false
     @State private var showSearch = false
     
     var detailSize = CGSize(width: 0, height: UIScreen.main.bounds.height)
-    
-    @State private var sampleData = WeatherData.sampleData
     
     var body: some View {
         VStack {
@@ -46,13 +40,13 @@ struct ContentView: View {
                         MainCardView(selected: $selected, weatherVM: CurrentWeatherViewModel())
                             .cornerRadius(CGFloat(20))
                             .padding()
-                            .shadow(color: Color(self.weather.color)
+                            .shadow(color: Color("mainCard")
                             .opacity(0.4), radius: 20, x: 0, y: 0)
                     } else {
                         MainCardView(selected: $selected, weatherVM: CurrentWeatherViewModel())
                             .cornerRadius(CGFloat(20))
                             .padding()
-                            .shadow(color: Color(self.weather.color)
+                            .shadow(color: Color("mainCard")
                             .opacity(0.4), radius: 20, x: 0, y: 0)
                     }
                     
@@ -65,11 +59,15 @@ struct ContentView: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 20) {
-                            ForEach($sevemDaysVM.weatherDays.wrappedValue, id: \.self) { random in
+                            ForEach($sevemDaysVM.meters.wrappedValue, id: \.dt) { random in
                                 SmallCardView(weathers: random).onTapGesture {
                                     self.showDatail.toggle()
                                     self.weathers = random
                                 }
+                                .sheet(isPresented: self.$showDatail, content: {
+                                    DetailView(weathers: self.weathers, showDetails: self.$showDatail)
+                                })
+                                .edgesIgnoringSafeArea(.bottom)
                             }
                         }
                         .frame(height: 380)
@@ -77,9 +75,6 @@ struct ContentView: View {
                     }
                     .frame(height: 350, alignment: .top)
                 }
-//                DetailView(weather: self.$weather, showDetails: self.$showDatail)
-//                    .offset(self.showDatail ? CGSize.zero : detailSize)
-//                    .edgesIgnoringSafeArea(.bottom)
             }
         }
         .onAppear() {

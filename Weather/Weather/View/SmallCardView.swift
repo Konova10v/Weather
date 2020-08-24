@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SmallCardView: View {
-    @State var weathers: WeatherDays
+    @State var weathers: TempStructure
     
     var body: some View {
         VStack(spacing: 30) {
@@ -26,17 +26,7 @@ struct SmallCardView: View {
                     .scaledToFill()
                     .offset(CGSize(width: 0, height: 30))
                 
-                VStack(spacing: 8) {
-                    Text("0")
-                        .foregroundColor(Color.white)
-                        .fontWeight(.bold)
-                    HStack {
-                        Text ("50°")
-                            .foregroundColor(Color("light-text"))
-                        Text("50°")
-                            .foregroundColor(Color.white)
-                    }
-                }
+                getTemp()
             }
         }
         .frame(width: 200, height: 300)
@@ -47,22 +37,51 @@ struct SmallCardView: View {
     
     func getDate() -> some View {
         var localDate: String = ""
-        if let timeResult = Double(weathers.date) {
-            let date = Date(timeIntervalSince1970: timeResult)
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = DateFormatter.Style.medium
-            dateFormatter.timeZone = .current
-            localDate = dateFormatter.string(from: date)
-        }
+        let timeResult = Double(weathers.dt)
+        let date = Date(timeIntervalSince1970: timeResult)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.medium
+        dateFormatter.timeZone = .current
+        localDate = dateFormatter.string(from: date)
         return Text(localDate)
             .fontWeight(.bold)
             .foregroundColor(Color.white)
             .offset(CGSize(width: 0, height: 15))
     }
+    
+    func getTemp() -> some View {
+        var temperature: String {
+            let temp = weathers.temp.day
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        var temperatureMin: String {
+            let temp = weathers.temp.min
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        var temperatureMax: String {
+            let temp = weathers.temp.max
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        return VStack(spacing: 8) {
+            Text(temperature)
+                .foregroundColor(Color.white)
+                .fontWeight(.bold)
+            
+            HStack {
+                Text (temperatureMin)
+                    .foregroundColor(Color("light-text"))
+                Text(temperatureMax)
+                    .foregroundColor(Color.white)
+            }
+        }
+    }
 }
 
 struct SmallCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SmallCardView(weathers: WeatherDays.getDefault())
+        SmallCardView(weathers: TempStructure.getDefault())
     }
 }

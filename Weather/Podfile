@@ -8,5 +8,6 @@ target 'Weather' do
   # Pods for Weather
   pod 'Alamofire', '~> 5.0.0-rc.3'
   pod 'SwiftyJSON'
+  pod 'ObjectMapper'
 
 end

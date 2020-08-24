@@ -8,6 +8,8 @@
 
 import Foundation
 import SwiftyJSON
+import Alamofire
+import ObjectMapper
 
 class WeatherService {
     func getCurrentWeatherMoscow(completion: @escaping (Result<Weather?, NetworkError>) -> Void) {
@@ -48,20 +50,21 @@ class WeatherService {
         }.resume()
     }
     
-    public func getDaysWeather(onSuccess successCallback: ((_ response: [WeatherDays]) -> Void)?,
-                               onFailure failureCallback: ((_ errorMessage: String) -> Void)?) {
+    public func getDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         
         let url = ServerAPI.moscowSevenDay
         
         APICallManager.shared.createRequest(url, method: .get, headers: nil, parameters: nil, onSuccess: { (responseObject: JSON) -> Void in
-            var data = [WeatherDays]()
             if let cocktailList = responseObject["daily"].arrayObject as? [[String : Any]] {
-                data = WeatherDays.getModels(cocktailList)
+                if let mapped: [TempStructureMapper] = Mapper<TempStructureMapper>().mapArray(JSONObject: cocktailList) {
+
+                    let meters = WeatherService.self.convertMeters(meters: mapped)
+                    callback(meters)
+                }
             }
-            successCallback?(data)
             
         }, onFailure: {(errorMessage: String) -> Void in
-            failureCallback?(errorMessage)
+            print("error")
         })
     }
     
@@ -85,7 +88,30 @@ class WeatherService {
             }
             
         }.resume()
-        
+    }
+}
+
+extension WeatherService {
+    fileprivate class func convert(meter: TempStructureMapper) -> TempStructure? {
+        guard let dt = meter.dt, let temp = self.convertTemp(meter: meter.temp!)  else { return nil }
+        return TempStructure(dt: dt, temp: temp)
+    }
+    
+    fileprivate class func convertTemp(meter: TempMapper) -> Temp? {
+        guard let temp = meter.temp, let tempMin = meter.tempMin, let tempMax = meter.tempMax  else { return nil }
+        return Temp(day: temp, min: tempMin, max: tempMax)
+    }
+    
+    fileprivate class func convertMeters(meters: [TempStructureMapper]) -> [TempStructure] {
+        var arr = Array<TempStructure>()
+        for met in meters {
+            if let meter = self.convert(meter: met) {
+                arr.append(meter)
+            } else {
+                continue
+            }
+        }
+        return arr
     }
 }
 

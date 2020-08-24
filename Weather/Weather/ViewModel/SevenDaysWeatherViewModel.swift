@@ -12,14 +12,11 @@ class SevenDaysWeatherViewModel: ObservableObject {
     @Published var temperatureUnit: TemperatureUnit = .celsius
     @Published var isVisible: Bool = false
     
-    var weatherDays: [WeatherDays] = [WeatherDays]()
+    var meters: [TempStructure] = []
     
     func fetchWeatherMoscow() {
-        WeatherService().getDaysWeather(onSuccess: { (response) in
-            self.weatherDays = response
-            self.isVisible = true
-        }, onFailure: {(message) in
-            print("message \(message)")
-        })
+        WeatherService().getDaysWeather { (temp) in
+            self.meters = temp
+        }
     }
 }

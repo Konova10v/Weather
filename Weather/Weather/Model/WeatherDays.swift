@@ -7,22 +7,58 @@
 //
 
 import Foundation
+import ObjectMapper
 
-struct WeatherDays: Hashable {
-    var date: String = ""
+struct TempStructure {
     
-    init (json: [String: Any]) {
-        if let date = json["dt"] { self.date = "\(date)" }
+    var dt: Double = 0.0
+    let temp: Temp
+
+    init(dt: Double, temp: Temp) {
+        self.dt = dt
+        self.temp = temp
     }
     
-    static func getModels(_ json: [[String : Any]]) -> [WeatherDays] {
-        return json.map { WeatherDays(json: $0)}
-    }
-    
-    static func getDefault() -> WeatherDays {
-        let data: [String: Any] = [
-            "dt": "25.05.2020"]
-        
-        return WeatherDays(json: data)
+    static func getDefault() -> TempStructure {
+        return TempStructure.init(dt: 2, temp: Temp(day: 0.0, min: 0.0, max: 0.0))
     }
 }
+
+struct Temp {
+    var day: Double = 0.0
+    var min: Double = 0.0
+    var max: Double = 0.0
+}
+
+class TempStructureMapper: Mappable {
+
+    var dt: Double?
+    var temp: TempMapper?
+
+    required init?(map: Map) {
+        // ...
+    }
+
+    func mapping(map: Map) {
+        self.dt <- map["dt"]
+        self.temp <- map["temp"]
+    }
+}
+
+class TempMapper: Mappable {
+    var temp: Double?
+    var tempMin: Double?
+    var tempMax: Double?
+    
+    required init?(map: Map) {
+        // ...
+    }
+
+    func mapping(map: Map) {
+        self.temp <- map["day"]
+        self.tempMin <- map["min"]
+        self.tempMax <- map["max"]
+    }
+}
+
+

@@ -9,53 +9,29 @@
 import SwiftUI
 
 struct DetailView: View {
-    @Binding var weather: WeatherData
+    @State var weathers: TempStructure
     @Binding var showDetails: Bool
     
     var body: some View {
         GeometryReader { gr in
             ZStack {
                 VStack(spacing: 20) {
-                    
                     // Day text
-                    Text(self.weather.day).fontWeight(.bold)
-                        .font(.system(size: 60))
-                        .frame(height: gr.size.height * 1/10)
-                        .minimumScaleFactor(0.5)
-                        .foregroundColor(Color.white)
+                    self.getDate()
                         
                     // Weather image
-                    Image(systemName: self.weather.weatherIcon)
+                    Image(systemName: "sun.max")
                         .resizable()
                         .foregroundColor(Color.white)
                         .frame(width: gr.size.height * 3 / 10, height: gr.size.height * 3 / 10)
                         
                     // Degrees texts
-                    VStack {
-                        VStack(spacing: 20) {
-                            Text("\(self.weather.currentTemp)°")
-                                .font(.system(size: 50))
-                                .foregroundColor(Color.white)
-                                .fontWeight(.bold)
-                                .frame(height: gr.size.height * 0.7/10)
-                                    .minimumScaleFactor(0.5)
-                                
-                            HStack(spacing: 40) {
-                                Text("\(self.weather.minTemp)°")
-                                    .foregroundColor(Color("light-text"))
-                                    .font(.title)
-                                    .minimumScaleFactor(0.5)
-                                    
-                                Text("\(self.weather.maxTemp)°")
-                                    .foregroundColor(Color.white)
-                                    .font(.title)
-                                    .minimumScaleFactor(0.5)
-                            }
-                        }
-                    }
-                }.frame(minWidth: 0, maxWidth: .infinity, minHeight: gr.size.height, alignment: .bottom)
-                    .background(Color(self.weather.color))
-                    .clipShape(CustomShape(), style: FillStyle.init(eoFill: true, antialiased: true))
+                    self.getTemp()
+                    
+                }
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: gr.size.height, alignment: .bottom)
+                .background(Color("mainCard"))
+                .clipShape(CustomShape(), style: FillStyle.init(eoFill: true, antialiased: true))
                 
                 // Close icon
                 HStack {
@@ -63,20 +39,75 @@ struct DetailView: View {
                         .resizable()
                         .foregroundColor(Color.red)
                         .frame(width: 20, height: 20)
-                }.padding(20)
-                    .background(Color.white)
-                    .cornerRadius(100)
-                    .offset(x: 0, y: -gr.size.height / 2)
-                    .shadow(radius: 20)
-                    .onTapGesture {
-                        withAnimation(.spring()) {
-                            self.showDetails.toggle()
-                        }
+                }
+                .padding(20)
+                .background(Color.white)
+                .cornerRadius(100)
+                .offset(x: 0, y: -gr.size.height / 2)
+                .shadow(radius: 20)
+                .onTapGesture {
+                    withAnimation(.spring()) {
+                        self.showDetails.toggle()
                     }
                 }
             }
         }
     }
+    
+    func getDate() -> some View {
+        var localDate: String = ""
+        let timeResult = Double(weathers.dt)
+        let date = Date(timeIntervalSince1970: timeResult)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.medium
+        dateFormatter.timeZone = .current
+        localDate = dateFormatter.string(from: date)
+        
+        return Text(localDate).fontWeight(.bold)
+            .font(.system(size: 60))
+            .minimumScaleFactor(0.5)
+            .foregroundColor(Color.white)
+    }
+    
+    func getTemp() -> some View {
+        var temperature: String {
+            let temp = weathers.temp.day
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        var temperatureMin: String {
+            let temp = weathers.temp.min
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        var temperatureMax: String {
+            let temp = weathers.temp.max
+            return String(format: "%.0F C", temp.toCelsius())
+        }
+        
+        return VStack {
+            VStack(spacing: 20) {
+                Text(temperature + "°")
+                    .font(.system(size: 50))
+                    .foregroundColor(Color.white)
+                    .fontWeight(.bold)
+                    .minimumScaleFactor(0.5)
+                    
+                HStack(spacing: 40) {
+                    Text(temperatureMin + "°")
+                        .foregroundColor(Color("light-text"))
+                        .font(.title)
+                        .minimumScaleFactor(0.5)
+                        
+                    Text(temperatureMax + "°")
+                        .foregroundColor(Color.white)
+                        .font(.title)
+                        .minimumScaleFactor(0.5)
+                }
+            }
+        }
+    }
+}
 
 struct CustomShape: Shape {
     func path(in rect: CGRect) -> Path {
@@ -93,12 +124,10 @@ struct CustomShape: Shape {
         
         return path
     }
-    
-    
 }
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(weather: .constant(WeatherData(id: 1, day: "Monday", weatherIcon:  "sun.max", currentTemp:  "40", minTemp: "25", maxTemp: "69", color: "mainCard")), showDetails: .constant(false))
+        DetailView(weathers: TempStructure.getDefault(), showDetails: .constant(false))
     }
 }

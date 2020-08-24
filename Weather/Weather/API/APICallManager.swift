@@ -17,6 +17,7 @@ enum ServerAPI {
     static var moscow = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=\(ServerAPI.apiID)")
     static var saintPetersburg = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Saint%20Petersburg&appid=\(ServerAPI.apiID)")
     static var moscowSevenDay =  "https://api.openweathermap.org/data/2.5/onecall?lat=55.751244&lon=37.618423&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
+    static var moscowSevenDayTest = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=55.751244&lon=37.618423&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)")
 }
 
 enum NetworkError: Error {
