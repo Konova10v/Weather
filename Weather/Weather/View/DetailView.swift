@@ -53,18 +53,6 @@ struct DetailView: View {
                             }
                         }
                     }
-                    // Hourly views
-                    HStack (spacing: 20){
-                        HourView()
-                        HourView(hour: "15:00", icon: "sun.dust.fill", color: "tuesday")
-                        HourView(hour: "16:00",icon: "cloud.rain.fill", color: "thursday")
-                        HourView(hour: "17:00",icon: "cloud.bolt.fill", color: "sunday")
-                        HourView(hour: "18:00",icon: "snow", color: "mainCard")
-                    }.frame(minWidth: 0, maxWidth: .infinity, minHeight: gr.size.height * 2 / 10)
-                        .padding(.horizontal)
-                        .background(Color.white)
-                        .cornerRadius(30)
-                        .padding()
                 }.frame(minWidth: 0, maxWidth: .infinity, minHeight: gr.size.height, alignment: .bottom)
                     .background(Color(self.weather.color))
                     .clipShape(CustomShape(), style: FillStyle.init(eoFill: true, antialiased: true))

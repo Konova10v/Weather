@@ -83,7 +83,7 @@ struct WeatherView: View {
 struct LoadingView: View {
     var body: some View {
         VStack {
-            Text("Loading your amazing weather!")
+            Text("Loading your weather!")
                 .font(.body)
                 .foregroundColor(Color.white)
           

@@ -67,6 +67,19 @@ class CurrentWeatherViewModel: ObservableObject {
             }
         }
     }
+    
+    func fetchWeatherSaintPetersburg() {
+        WeatherService().getCurrentWeatherSaintPetersburg { result in
+            switch result {
+            case .success(let weather):
+                DispatchQueue.main.async {
+                    self.weather = weather
+                }
+            case .failure(_):
+                return
+            }
+        }
+    }
 }
 
 

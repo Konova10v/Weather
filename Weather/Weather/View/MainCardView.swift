@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MainCardView: View {
-    @Binding var weather: WeatherData
+    @Binding var selected: Int
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     
     var body: some View {
@@ -18,23 +18,26 @@ struct MainCardView: View {
                 .resizable().aspectRatio(contentMode: .fill)
             
             VStack(spacing: 5) {
-                Text("\(weather.currentTemp)°")
+                if !weatherVM.temperature.isEmpty {
+                    Text("\(weatherVM.temperature)°")
                     .foregroundColor(Color.white)
                     .fontWeight(Font.Weight.heavy)
                     .font(Font.system(size: 70))
-                Image(systemName: weather.weatherIcon)
+                }
+                
+                Image(systemName: "sun.max")
                     .resizable()
                     .foregroundColor(Color.white)
                     .frame(width: 100, height: 100)
                     .aspectRatio(contentMode: .fit)
                 
                 HStack(spacing: 20) {
-                    Text("\(weather.maxTemp)°")
+                    Text("\(weatherVM.temperatureMin)°")
                     .foregroundColor(Color.white)
                     .font(.title)
                     .padding(.vertical)
                     
-                    Text("\(weather.maxTemp)°")
+                    Text("\(weatherVM.temperatureMax)°")
                     .foregroundColor(Color.white)
                     .font(.title)
                     .padding(.vertical)
@@ -49,12 +52,19 @@ struct MainCardView: View {
             }
         }
         .frame(minWidth: 0, maxWidth: .infinity)
-        .background(Color(weather.color))
+        .background(Color("mainCard"))
+        .onAppear() {
+            if self.selected == 0 {
+                self.weatherVM.fetchWeatherMoscow()
+            } else {
+                self.weatherVM.fetchWeatherSaintPetersburg()
+            }
+        }
     }
 }
 
 struct MainCardView_Previews: PreviewProvider {
     static var previews: some View {
-        MainCardView(weather: .constant(WeatherData.sampleData[0]), weatherVM: CurrentWeatherViewModel())
+        MainCardView(selected: .constant(0), weatherVM: CurrentWeatherViewModel())
     }
 }

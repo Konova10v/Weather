@@ -35,6 +35,28 @@ class SearchViewModel: ObservableObject {
         }
     }
     
+    var temperatureMin: String {
+        guard let temp = weather?.tempMin else { return "N/A"}
+        
+        switch temperatureUnit {
+        case .celsius:
+            return String(format: "%.0F C", temp.toCelsius())
+        case .fahrenheit:
+            return String(format: "%.0F F", temp.toFahrenheit())
+        }
+    }
+    
+    var temperatureMax: String {
+        guard let temp = weather?.tempMax else { return "N/A"}
+        
+        switch temperatureUnit {
+        case .celsius:
+            return String(format: "%.0F C", temp.toCelsius())
+        case .fahrenheit:
+            return String(format: "%.0F F", temp.toFahrenheit())
+        }
+    }
+    
     var humidity: String {
         guard let humidity = weather?.humidity else {
             return "N/A"
