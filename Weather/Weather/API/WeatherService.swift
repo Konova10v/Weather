@@ -50,9 +50,27 @@ class WeatherService {
         }.resume()
     }
     
-    public func getDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
+    public func getMoscowDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         
-        let url = ServerAPI.moscowSevenDay
+        let url = ServerAPI.moscowWeatherDay
+        
+        APICallManager.shared.createRequest(url, method: .get, headers: nil, parameters: nil, onSuccess: { (responseObject: JSON) -> Void in
+            if let cocktailList = responseObject["daily"].arrayObject as? [[String : Any]] {
+                if let mapped: [TempStructureMapper] = Mapper<TempStructureMapper>().mapArray(JSONObject: cocktailList) {
+
+                    let meters = WeatherService.self.convertMeters(meters: mapped)
+                    callback(meters)
+                }
+            }
+            
+        }, onFailure: {(errorMessage: String) -> Void in
+            print("error")
+        })
+    }
+    
+    public func getSaintPetersburgDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
+        
+        let url = ServerAPI.saintPetersburgWeatherDay
         
         APICallManager.shared.createRequest(url, method: .get, headers: nil, parameters: nil, onSuccess: { (responseObject: JSON) -> Void in
             if let cocktailList = responseObject["daily"].arrayObject as? [[String : Any]] {
@@ -93,8 +111,8 @@ class WeatherService {
 
 extension WeatherService {
     fileprivate class func convert(meter: TempStructureMapper) -> TempStructure? {
-        guard let dt = meter.dt, let temp = self.convertTemp(meter: meter.temp!)  else { return nil }
-        return TempStructure(dt: dt, temp: temp)
+        guard let dt = meter.dt, let temp = self.convertTemp(meter: meter.temp!), let humidity = meter.humidity else { return nil }
+        return TempStructure(dt: dt, temp: temp, humidity: humidity)
     }
     
     fileprivate class func convertTemp(meter: TempMapper) -> Temp? {

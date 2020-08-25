@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftUI
 struct ContentView: View {
     @ObservedObject var weatherVM: CurrentWeatherViewModel
-    @ObservedObject var sevemDaysVM: SevenDaysWeatherViewModel
+    @ObservedObject var sevemDaysVM: DaysWeatherViewModel
     @State var selected = 0
     @State var weathers: TempStructure = TempStructure.getDefault()
     @State private var showDatail = false
@@ -58,33 +58,42 @@ struct ContentView: View {
                         .padding(.horizontal)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 20) {
-                            ForEach($sevemDaysVM.meters.wrappedValue, id: \.dt) { random in
-                                SmallCardView(weathers: random).onTapGesture {
-                                    self.showDatail.toggle()
-                                    self.weathers = random
-                                }
-                                .sheet(isPresented: self.$showDatail, content: {
-                                    DetailView(weathers: self.weathers, showDetails: self.$showDatail)
-                                })
-                                .edgesIgnoringSafeArea(.bottom)
-                            }
-                        }
-                        .frame(height: 380)
-                        .padding(.horizontal)
+                        getTemp()
                     }
                     .frame(height: 350, alignment: .top)
                 }
+                DetailView(weathers: self.$weathers, showDetails: self.$showDatail)
+                    .offset(self.showDatail ? CGSize.zero : detailSize)
+                    .edgesIgnoringSafeArea(.bottom)
             }
         }
-        .onAppear() {
+    }
+    
+    func getTemp() -> some View {
+        var temp: [TempStructure]
+        if selected == 0 {
             self.sevemDaysVM.fetchWeatherMoscow()
+            temp = $sevemDaysVM.tempMoscow.wrappedValue
+        } else {
+            self.sevemDaysVM.fetchWeatherSaintPetersburg()
+            temp = $sevemDaysVM.tempSaintPetersburg.wrappedValue
         }
+        
+        return HStack(spacing: 20) {
+            ForEach(temp, id: \.dt) { random in
+                SmallCardView(weathers: random, selected: self.$selected, sevemDaysVM: DaysWeatherViewModel()).onTapGesture {
+                    self.showDatail.toggle()
+                    self.weathers = random
+                }
+            }
+        }
+        .frame(height: 380)
+        .padding(.horizontal)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(weatherVM: CurrentWeatherViewModel(), sevemDaysVM: SevenDaysWeatherViewModel())
+        ContentView(weatherVM: CurrentWeatherViewModel(), sevemDaysVM: DaysWeatherViewModel())
     }
 }

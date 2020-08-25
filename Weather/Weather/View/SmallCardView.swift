@@ -10,6 +10,8 @@ import SwiftUI
 
 struct SmallCardView: View {
     @State var weathers: TempStructure
+    @Binding var selected: Int
+    @ObservedObject var sevemDaysVM: DaysWeatherViewModel
     
     var body: some View {
         VStack(spacing: 30) {
@@ -33,6 +35,13 @@ struct SmallCardView: View {
         .background(Color("mainCard"))
         .cornerRadius(30)
         .shadow(color: Color("mainCard").opacity(0.7), radius: 10, x: 0, y: 8)
+        .onAppear() {
+            if self.selected == 0 {
+                self.sevemDaysVM.fetchWeatherMoscow()
+            } else {
+                self.sevemDaysVM.fetchWeatherSaintPetersburg()
+            }
+        }
     }
     
     func getDate() -> some View {
@@ -43,6 +52,7 @@ struct SmallCardView: View {
         dateFormatter.dateStyle = DateFormatter.Style.medium
         dateFormatter.timeZone = .current
         localDate = dateFormatter.string(from: date)
+        
         return Text(localDate)
             .fontWeight(.bold)
             .foregroundColor(Color.white)
@@ -82,6 +92,6 @@ struct SmallCardView: View {
 
 struct SmallCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SmallCardView(weathers: TempStructure.getDefault())
+        SmallCardView(weathers: TempStructure.getDefault(), selected: .constant(0), sevemDaysVM: DaysWeatherViewModel())
     }
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DetailView: View {
-    @State var weathers: TempStructure
+    @Binding var weathers: TempStructure
     @Binding var showDetails: Bool
     
     var body: some View {
@@ -128,6 +128,6 @@ struct CustomShape: Shape {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(weathers: TempStructure.getDefault(), showDetails: .constant(false))
+        DetailView(weathers: .constant(TempStructure(dt: 20, temp: Temp(day: 0, min: 0, max: 0), humidity: 12)), showDetails: .constant(false))
     }
 }

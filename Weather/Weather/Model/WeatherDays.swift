@@ -12,15 +12,18 @@ import ObjectMapper
 struct TempStructure {
     
     var dt: Double = 0.0
-    let temp: Temp
+    var temp: Temp
+    var humidity: Int
+    
 
-    init(dt: Double, temp: Temp) {
+    init(dt: Double, temp: Temp, humidity: Int) {
         self.dt = dt
         self.temp = temp
+        self.humidity = humidity
     }
     
     static func getDefault() -> TempStructure {
-        return TempStructure.init(dt: 2, temp: Temp(day: 0.0, min: 0.0, max: 0.0))
+        return TempStructure.init(dt: 2, temp: Temp(day: 0.0, min: 0.0, max: 0.0), humidity: 0)
     }
 }
 
@@ -30,10 +33,12 @@ struct Temp {
     var max: Double = 0.0
 }
 
+// MARK: - Mapper
 class TempStructureMapper: Mappable {
 
     var dt: Double?
     var temp: TempMapper?
+    var humidity: Int?
 
     required init?(map: Map) {
         // ...
@@ -42,6 +47,7 @@ class TempStructureMapper: Mappable {
     func mapping(map: Map) {
         self.dt <- map["dt"]
         self.temp <- map["temp"]
+        self.humidity <- map["humidity"]
     }
 }
 
@@ -60,5 +66,4 @@ class TempMapper: Mappable {
         self.tempMax <- map["max"]
     }
 }
-
 
