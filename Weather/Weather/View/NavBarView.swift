@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct NavBarView: View {
+    // MARK: Parametrs
     var country = "Russia"
     @Binding var showSearch: Bool
     
+    // MARK: UI
     var body: some View {
         HStack {
             Text(country).font(.title)

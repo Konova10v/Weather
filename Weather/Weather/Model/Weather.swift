@@ -9,10 +9,11 @@
 import Foundation
 
 struct WeatherResponse: Decodable {
-    let main: Weather
+    let main: Main
+    let weather: [Weather]
 }
 
-struct Weather: Decodable {
+struct Main: Decodable {
     let temp: Double
     let tempMin: Double
     let tempMax: Double
@@ -32,5 +33,19 @@ struct Weather: Decodable {
         self.tempMin = try container.decode(Double.self, forKey: .tempMin)
         self.tempMax = try container.decode(Double.self, forKey: .tempMax)
         self.humidity = try container.decode(Int.self, forKey: .humidity)
+    }
+}
+
+struct Weather: Decodable {
+    let main: String
+    
+    enum CodingKeys: String, CodingKey {
+        case main
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.main = try container.decode(String.self, forKey: .main)
     }
 }

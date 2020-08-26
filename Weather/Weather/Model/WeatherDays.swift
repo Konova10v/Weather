@@ -14,16 +14,18 @@ struct TempStructure {
     var dt: Double = 0.0
     var temp: Temp
     var humidity: Int
+    var weatherMain: String
     
 
-    init(dt: Double, temp: Temp, humidity: Int) {
+    init(dt: Double, temp: Temp, humidity: Int, weatherMain: String) {
         self.dt = dt
         self.temp = temp
         self.humidity = humidity
+        self.weatherMain = weatherMain
     }
     
     static func getDefault() -> TempStructure {
-        return TempStructure.init(dt: 2, temp: Temp(day: 0.0, min: 0.0, max: 0.0), humidity: 0)
+        return TempStructure.init(dt: 2, temp: Temp(day: 0.0, min: 0.0, max: 0.0), humidity: 0, weatherMain: "Rain")
     }
 }
 
@@ -39,6 +41,7 @@ class TempStructureMapper: Mappable {
     var dt: Double?
     var temp: TempMapper?
     var humidity: Int?
+    var weatherMain: String?
 
     required init?(map: Map) {
         // ...
@@ -48,6 +51,7 @@ class TempStructureMapper: Mappable {
         self.dt <- map["dt"]
         self.temp <- map["temp"]
         self.humidity <- map["humidity"]
+        self.weatherMain <- map["weather.0.main"]
     }
 }
 

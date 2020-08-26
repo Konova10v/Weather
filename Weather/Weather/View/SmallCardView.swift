@@ -9,18 +9,23 @@
 import SwiftUI
 
 struct SmallCardView: View {
+    // MARK: Parametrs
     @State var weathers: TempStructure
-    @Binding var selected: Int
     @ObservedObject var sevemDaysVM: DaysWeatherViewModel
     
+    // MARK: UI
     var body: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: 20) {
             getDate()
             
-            Image(systemName: "sun.max")
+            Image("\(weathers.weatherMain)")
                 .resizable()
                 .foregroundColor(Color.white)
                 .frame(width: 60, height: 60)
+            
+            Text("\(weathers.weatherMain)")
+                .foregroundColor(Color.white)
+                .fontWeight(.bold)
             
             ZStack {
                 Image("cloud")
@@ -35,15 +40,9 @@ struct SmallCardView: View {
         .background(Color("mainCard"))
         .cornerRadius(30)
         .shadow(color: Color("mainCard").opacity(0.7), radius: 10, x: 0, y: 8)
-        .onAppear() {
-            if self.selected == 0 {
-                self.sevemDaysVM.fetchWeatherMoscow()
-            } else {
-                self.sevemDaysVM.fetchWeatherSaintPetersburg()
-            }
-        }
     }
     
+    // MARK: Functions
     func getDate() -> some View {
         var localDate: String = ""
         let timeResult = Double(weathers.dt)
@@ -92,6 +91,6 @@ struct SmallCardView: View {
 
 struct SmallCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SmallCardView(weathers: TempStructure.getDefault(), selected: .constant(0), sevemDaysVM: DaysWeatherViewModel())
+        SmallCardView(weathers: TempStructure.getDefault(), sevemDaysVM: DaysWeatherViewModel())
     }
 }

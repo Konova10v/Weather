@@ -12,8 +12,8 @@ class DaysWeatherViewModel: ObservableObject {
     @Published var temperatureUnit: TemperatureUnit = .celsius
     @Published var isVisible: Bool = false
     
-    var tempMoscow: [TempStructure] = []
-    var tempSaintPetersburg: [TempStructure] = []
+    var tempMoscow: [TempStructure] = [TempStructure]()
+    var tempSaintPetersburg: [TempStructure] = [TempStructure]()
     
     func fetchWeatherMoscow() {
         WeatherService().getMoscowDaysWeather { (temp) in

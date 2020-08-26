@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "yellow-sun.png",
+      "filename" : "Thunderstorm-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "yellow-sun@2x.png",
+      "filename" : "Thunderstorm.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "yellow-sun@3x.png",
+      "filename" : "Thunderstorm-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

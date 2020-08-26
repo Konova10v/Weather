@@ -17,7 +17,7 @@ enum LoadingState {
 
 class SearchViewModel: ObservableObject {
     
-    @Published private var weather: Weather?
+    @Published private var weather: Main?
     @Published var message: String = ""
     @Published var loadingState: LoadingState = .none
     @Published var temperatureUnit: TemperatureUnit = .celsius

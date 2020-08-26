@@ -9,18 +9,25 @@
 import SwiftUI
 
 struct DetailView: View {
+    // MARK: Parametrs
     @Binding var weathers: TempStructure
     @Binding var showDetails: Bool
     
+    // MARK: UI
     var body: some View {
         GeometryReader { gr in
             ZStack {
-                VStack(spacing: 20) {
+                VStack(spacing: 10) {
                     // Day text
                     self.getDate()
                         
                     // Weather image
-                    Image(systemName: "sun.max")
+                    Text("\(self.weathers.weatherMain)")
+                        .font(.system(size: 20))
+                        .foregroundColor(Color.white)
+                        .fontWeight(.bold)
+                    
+                    Image("\(self.weathers.weatherMain)")
                         .resizable()
                         .foregroundColor(Color.white)
                         .frame(width: gr.size.height * 3 / 10, height: gr.size.height * 3 / 10)
@@ -54,6 +61,7 @@ struct DetailView: View {
         }
     }
     
+    // MARK: Functions
     func getDate() -> some View {
         var localDate: String = ""
         let timeResult = Double(weathers.dt)
@@ -92,14 +100,19 @@ struct DetailView: View {
                     .foregroundColor(Color.white)
                     .fontWeight(.bold)
                     .minimumScaleFactor(0.5)
-                    
+                Text("humidity: \(weathers.humidity) %")
+                    .font(.system(size: 20))
+                    .foregroundColor(Color.white)
+                    .fontWeight(.bold)
+                    .minimumScaleFactor(0.5)
+                
                 HStack(spacing: 40) {
-                    Text(temperatureMin + "°")
+                    Text("min: \(temperatureMin) °")
                         .foregroundColor(Color("light-text"))
                         .font(.title)
                         .minimumScaleFactor(0.5)
                         
-                    Text(temperatureMax + "°")
+                    Text("max: \(temperatureMax) °")
                         .foregroundColor(Color.white)
                         .font(.title)
                         .minimumScaleFactor(0.5)
@@ -128,6 +141,6 @@ struct CustomShape: Shape {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(weathers: .constant(TempStructure(dt: 20, temp: Temp(day: 0, min: 0, max: 0), humidity: 12)), showDetails: .constant(false))
+        DetailView(weathers: .constant(TempStructure(dt: 20, temp: Temp(day: 0, min: 0, max: 0), humidity: 12, weatherMain: "Rain")), showDetails: .constant(false))
     }
 }

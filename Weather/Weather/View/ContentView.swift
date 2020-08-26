@@ -10,6 +10,7 @@ import SwiftUI
 
 import SwiftUI
 struct ContentView: View {
+    // MARK: Parametrs
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     @ObservedObject var sevemDaysVM: DaysWeatherViewModel
     @State var selected = 0
@@ -19,6 +20,7 @@ struct ContentView: View {
     
     var detailSize = CGSize(width: 0, height: UIScreen.main.bounds.height)
     
+    // MARK: UI
     var body: some View {
         VStack {
             if selected == 0 {
@@ -67,21 +69,26 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.bottom)
             }
         }
+        .onAppear(perform: loadData)
+    }
+    
+    // MARK: Functions
+    private func loadData() {
+        self.sevemDaysVM.fetchWeatherMoscow()
+        self.sevemDaysVM.fetchWeatherSaintPetersburg()
     }
     
     func getTemp() -> some View {
         var temp: [TempStructure]
         if selected == 0 {
-            self.sevemDaysVM.fetchWeatherMoscow()
             temp = $sevemDaysVM.tempMoscow.wrappedValue
         } else {
-            self.sevemDaysVM.fetchWeatherSaintPetersburg()
             temp = $sevemDaysVM.tempSaintPetersburg.wrappedValue
         }
         
         return HStack(spacing: 20) {
             ForEach(temp, id: \.dt) { random in
-                SmallCardView(weathers: random, selected: self.$selected, sevemDaysVM: DaysWeatherViewModel()).onTapGesture {
+                SmallCardView(weathers: random, sevemDaysVM: DaysWeatherViewModel()).onTapGesture {
                     self.showDatail.toggle()
                     self.weathers = random
                 }

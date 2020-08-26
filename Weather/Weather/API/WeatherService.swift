@@ -12,7 +12,8 @@ import Alamofire
 import ObjectMapper
 
 class WeatherService {
-    func getCurrentWeatherMoscow(completion: @escaping (Result<Weather?, NetworkError>) -> Void) {
+    /// текущая погода в Москве
+    func getCurrentWeatherMoscow(completion: @escaping (Result<WeatherResponse?, NetworkError>) -> Void) {
         guard let url = ServerAPI.moscow else { return completion(.failure(.badUrl))}
         
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -23,15 +24,15 @@ class WeatherService {
             let response = try?
                 JSONDecoder().decode(WeatherResponse.self, from: data)
             if let response = response {
-                print(response.main)
-                completion(.success(response.main))
+                completion(.success(response))
             } else {
                 completion(.failure(.decodingError))
             }
         }.resume()
     }
     
-    func getCurrentWeatherSaintPetersburg(completion: @escaping (Result<Weather?, NetworkError>) -> Void) {
+    /// текущая погода в Санкт-Петербург
+    func getCurrentWeatherSaintPetersburg(completion: @escaping (Result<WeatherResponse?, NetworkError>) -> Void) {
         guard let url = ServerAPI.saintPetersburg else { return completion(.failure(.badUrl))}
         
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -42,14 +43,13 @@ class WeatherService {
             let response = try?
                 JSONDecoder().decode(WeatherResponse.self, from: data)
             if let response = response {
-                print(response.main)
-                completion(.success(response.main))
+                completion(.success(response))
             } else {
                 completion(.failure(.decodingError))
             }
         }.resume()
     }
-    
+    /// погода в Москве за несколько дней
     public func getMoscowDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         
         let url = ServerAPI.moscowWeatherDay
@@ -57,7 +57,6 @@ class WeatherService {
         APICallManager.shared.createRequest(url, method: .get, headers: nil, parameters: nil, onSuccess: { (responseObject: JSON) -> Void in
             if let cocktailList = responseObject["daily"].arrayObject as? [[String : Any]] {
                 if let mapped: [TempStructureMapper] = Mapper<TempStructureMapper>().mapArray(JSONObject: cocktailList) {
-
                     let meters = WeatherService.self.convertMeters(meters: mapped)
                     callback(meters)
                 }
@@ -68,6 +67,7 @@ class WeatherService {
         })
     }
     
+    /// погода в Санкт-Петербург за несколько дней
     public func getSaintPetersburgDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         
         let url = ServerAPI.saintPetersburgWeatherDay
@@ -86,7 +86,8 @@ class WeatherService {
         })
     }
     
-    func getSearchWeather(city: String,completion: @escaping (Result<Weather?, NetworkError>) -> Void) {
+    /// поиск текущей погоды на названию города
+    func getSearchWeather(city: String,completion: @escaping (Result<Main?, NetworkError>) -> Void) {
         
         guard let url = URL.urlForWeatherFor(city) else {
             return completion(.failure(.badUrl))
@@ -111,8 +112,8 @@ class WeatherService {
 
 extension WeatherService {
     fileprivate class func convert(meter: TempStructureMapper) -> TempStructure? {
-        guard let dt = meter.dt, let temp = self.convertTemp(meter: meter.temp!), let humidity = meter.humidity else { return nil }
-        return TempStructure(dt: dt, temp: temp, humidity: humidity)
+        guard let dt = meter.dt, let temp = self.convertTemp(meter: meter.temp!), let humidity = meter.humidity, let weatherMain = meter.weatherMain else { return nil }
+        return TempStructure(dt: dt, temp: temp, humidity: humidity, weatherMain: weatherMain)
     }
     
     fileprivate class func convertTemp(meter: TempMapper) -> Temp? {

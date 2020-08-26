@@ -14,11 +14,11 @@ enum TemperatureUnit: String, CaseIterable {
 }
 
 class CurrentWeatherViewModel: ObservableObject {
-    @Published private var weather: Weather?
+    @Published private var weather: WeatherResponse?
     @Published var temperatureUnit: TemperatureUnit = .celsius
     
     var temperature: String {
-        guard let temp = weather?.temp else { return "N/A"}
+        guard let temp = weather?.main.temp else { return "N/A"}
         
         switch temperatureUnit {
         case .celsius:
@@ -29,7 +29,7 @@ class CurrentWeatherViewModel: ObservableObject {
     }
     
     var temperatureMin: String {
-        guard let temp = weather?.tempMin else { return "N/A"}
+        guard let temp = weather?.main.tempMin else { return "N/A"}
         
         switch temperatureUnit {
         case .celsius:
@@ -40,7 +40,7 @@ class CurrentWeatherViewModel: ObservableObject {
     }
     
     var temperatureMax: String {
-        guard let temp = weather?.tempMax else { return "N/A"}
+        guard let temp = weather?.main.tempMax else { return "N/A"}
         
         switch temperatureUnit {
         case .celsius:
@@ -51,8 +51,13 @@ class CurrentWeatherViewModel: ObservableObject {
     }
     
     var humidity: String {
-        guard let humidity = weather?.humidity else { return "N/A" }
+        guard let humidity = weather?.main.humidity else { return "N/A" }
         return String(format: "%.0F %%", humidity)
+    }
+    
+    var icon: String {
+        guard let icon = weather?.weather[0] else { return "Atmosphere" }
+        return icon.main
     }
     
     func fetchWeatherMoscow() {

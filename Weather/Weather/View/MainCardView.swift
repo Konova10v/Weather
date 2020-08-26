@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct MainCardView: View {
+    // MARK: Parametrs
     @Binding var selected: Int
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     
+    // MARK: UI
     var body: some View {
         ZStack {
             Image("card-bg")
@@ -25,7 +27,12 @@ struct MainCardView: View {
                     .font(Font.system(size: 70))
                 }
                 
-                Image(systemName: "sun.max")
+                Text("\(weatherVM.icon)")
+                    .foregroundColor(Color.white)
+                    .fontWeight(Font.Weight.heavy)
+                    .font(Font.system(size: 20))
+                
+                Image("\(weatherVM.icon)")
                     .resizable()
                     .foregroundColor(Color.white)
                     .frame(width: 100, height: 100)

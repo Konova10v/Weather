@@ -9,15 +9,10 @@
 import Foundation
 
 extension URL {
-    
     static func urlForWeatherFor(_ city: String) -> URL? {
-        
         guard let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=\(city)&appid=\(ServerAPI.apiID)") else {
             return nil
         }
-        
         return url
-        
     }
-    
 }
