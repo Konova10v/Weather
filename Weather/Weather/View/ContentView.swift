@@ -12,7 +12,7 @@ import SwiftUI
 struct ContentView: View {
     // MARK: Parametrs
     @ObservedObject var weatherVM: CurrentWeatherViewModel
-    @ObservedObject var sevemDaysVM: DaysWeatherViewModel
+    @ObservedObject var daysWeatherVM: DaysWeatherViewModel
     @State var selected = 0
     @State var weathers: TempStructure = TempStructure.getDefault()
     @State private var showDatail = false
@@ -78,24 +78,24 @@ struct ContentView: View {
     
     // MARK: Functions
     private func loadData() {
-        self.sevemDaysVM.fetchWeatherMoscow()
-        self.sevemDaysVM.fetchWeatherSaintPetersburg()
+        self.daysWeatherVM.fetchWeatherMoscow()
+        self.daysWeatherVM.fetchWeatherSaintPetersburg()
     }
     
     func getTemp() -> some View {
         var temp: [TempStructure]
         if selected == 0 {
-            temp = $sevemDaysVM.tempMoscow.wrappedValue
+            temp = $daysWeatherVM.tempMoscow.wrappedValue
         } else if selected == 1 {
-            temp = $sevemDaysVM.tempSaintPetersburg.wrappedValue
+            temp = $daysWeatherVM.tempSaintPetersburg.wrappedValue
         } else {
-            self.sevemDaysVM.fetchAddWeather(city: weatherVM.city)
-            temp = $sevemDaysVM.tempAdd.wrappedValue
+            self.daysWeatherVM.fetchAddWeather(city: weatherVM.city)
+            temp = $daysWeatherVM.tempAdd.wrappedValue
         }
         
         return HStack(spacing: 20) {
             ForEach(temp, id: \.dt) { random in
-                SmallCardView(weathers: random, sevemDaysVM: DaysWeatherViewModel()).onTapGesture {
+                SmallCardView(weathers: random, daysWeathersVM: DaysWeatherViewModel()).onTapGesture {
                     self.showDatail.toggle()
                     self.weathers = random
                 }
@@ -108,6 +108,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(weatherVM: CurrentWeatherViewModel(), sevemDaysVM: DaysWeatherViewModel())
+        ContentView(weatherVM: CurrentWeatherViewModel(), daysWeatherVM: DaysWeatherViewModel())
     }
 }

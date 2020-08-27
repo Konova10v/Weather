@@ -11,7 +11,7 @@ import SwiftUI
 struct SmallCardView: View {
     // MARK: Parametrs
     @State var weathers: TempStructure
-    @ObservedObject var sevemDaysVM: DaysWeatherViewModel
+    @ObservedObject var daysWeathersVM: DaysWeatherViewModel
     
     // MARK: UI
     var body: some View {
@@ -91,6 +91,6 @@ struct SmallCardView: View {
 
 struct SmallCardView_Previews: PreviewProvider {
     static var previews: some View {
-        SmallCardView(weathers: TempStructure.getDefault(), sevemDaysVM: DaysWeatherViewModel())
+        SmallCardView(weathers: TempStructure.getDefault(), daysWeathersVM: DaysWeatherViewModel())
     }
 }
