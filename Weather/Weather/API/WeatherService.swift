@@ -10,6 +10,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import ObjectMapper
+import CoreLocation
 
 class WeatherService {
     /// текущая погода в Москве
@@ -87,7 +88,7 @@ class WeatherService {
     }
     
     /// поиск текущей погоды на названию города
-    func getSearchWeather(city: String,completion: @escaping (Result<Main?, NetworkError>) -> Void) {
+    func getSearchWeather(city: String,completion: @escaping (Result<WeatherResponse?, NetworkError>) -> Void) {
         
         guard let url = URL.urlForWeatherFor(city) else {
             return completion(.failure(.badUrl))
@@ -101,12 +102,29 @@ class WeatherService {
             
             let weatherResponse = try? JSONDecoder().decode(WeatherResponse.self, from: data)
             if let weatherResponse = weatherResponse {
-                completion(.success(weatherResponse.main))
+                completion(.success(weatherResponse))
             } else {
                 completion(.failure(.decodingError))
             }
             
         }.resume()
+    }
+    
+    public func getAddDaysWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees, callback: @escaping (_ meters: [TempStructure]) -> Void ) {
+        let url = "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
+        
+        APICallManager.shared.createRequest(url, method: .get, headers: nil, parameters: nil, onSuccess: { (responseObject: JSON) -> Void in
+            if let cocktailList = responseObject["daily"].arrayObject as? [[String : Any]] {
+                if let mapped: [TempStructureMapper] = Mapper<TempStructureMapper>().mapArray(JSONObject: cocktailList) {
+
+                    let meters = WeatherService.self.convertMeters(meters: mapped)
+                    callback(meters)
+                }
+            }
+            
+        }, onFailure: {(errorMessage: String) -> Void in
+            print("error")
+        })
     }
 }
 

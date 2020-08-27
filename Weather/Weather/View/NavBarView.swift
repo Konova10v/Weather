@@ -22,7 +22,7 @@ struct NavBarView: View {
                 .resizable()
                 .frame(width: 25, height: 25)
                 .sheet(isPresented: self.$showSearch, content: {
-                    SearchView(searchWeatherVM: SearchViewModel())
+                    SearchView(searchWeatherVM: CurrentWeatherViewModel())
             })
             .cornerRadius(CGFloat(20))
             .padding()

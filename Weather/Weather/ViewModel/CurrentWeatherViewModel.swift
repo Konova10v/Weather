@@ -7,15 +7,32 @@
 //
 
 import Foundation
+import CoreLocation
+import SwiftUI
 
 enum TemperatureUnit: String, CaseIterable {
     case celsius
     case fahrenheit
 }
 
+enum LoadingState {
+    case none
+    case loading
+    case success
+    case failed
+}
+
 class CurrentWeatherViewModel: ObservableObject {
     @Published private var weather: WeatherResponse?
     @Published var temperatureUnit: TemperatureUnit = .celsius
+    @Published var message: String = ""
+    @Published var loadingState: LoadingState = .none
+    let defaults = UserDefaults.standard
+    
+    var city: String {
+        let city = self.defaults.string(forKey: "myCity")
+        return city!
+    }
     
     var temperature: String {
         guard let temp = weather?.main.temp else { return "N/A"}
@@ -82,6 +99,35 @@ class CurrentWeatherViewModel: ObservableObject {
                 }
             case .failure(_):
                 return
+            }
+        }
+    }
+    
+    func fetchWeather(city: String) {
+        
+        guard let city = city.escaped() else {
+            DispatchQueue.main.async {
+                self.message = "City is incorrect"
+            }
+            return
+        }
+        
+        self.loadingState = .loading
+        
+        WeatherService().getSearchWeather(city: city) { result in
+            switch result {
+                case .success(let weather):
+                    DispatchQueue.main.async {
+                        self.weather = weather
+                        self.loadingState = .success
+                        self.defaults.set(city, forKey: "myCity")
+                        self.defaults.synchronize()
+                    }
+                case .failure(_ ):
+                    DispatchQueue.main.async {
+                        self.message = "Unable to find weather"
+                        self.loadingState = .failed
+                }
             }
         }
     }

@@ -17,6 +17,7 @@ struct ContentView: View {
     @State var weathers: TempStructure = TempStructure.getDefault()
     @State private var showDatail = false
     @State private var showSearch = false
+    let defaults = UserDefaults.standard
     
     var detailSize = CGSize(width: 0, height: UIScreen.main.bounds.height)
     
@@ -25,13 +26,16 @@ struct ContentView: View {
         VStack {
             if selected == 0 {
                 NavBarView(country: "Moscow", showSearch: self.$showSearch)
-            } else {
+            } else if selected == 1 {
                 NavBarView(country: "Saint Petersburg", showSearch: self.$showSearch)
+            } else {
+                NavBarView(country: "\(weatherVM.city)", showSearch: self.$showSearch)
             }
             
             Picker("", selection: $selected) {
                 Text("Moscow").tag(0)
                 Text("Saint Petersburg").tag(1)
+                Text("You City").tag(2)
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
@@ -82,8 +86,11 @@ struct ContentView: View {
         var temp: [TempStructure]
         if selected == 0 {
             temp = $sevemDaysVM.tempMoscow.wrappedValue
-        } else {
+        } else if selected == 1 {
             temp = $sevemDaysVM.tempSaintPetersburg.wrappedValue
+        } else {
+            self.sevemDaysVM.fetchAddWeather(city: weatherVM.city)
+            temp = $sevemDaysVM.tempAdd.wrappedValue
         }
         
         return HStack(spacing: 20) {

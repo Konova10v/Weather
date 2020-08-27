@@ -12,6 +12,7 @@ struct MainCardView: View {
     // MARK: Parametrs
     @Binding var selected: Int
     @ObservedObject var weatherVM: CurrentWeatherViewModel
+    let defaults = UserDefaults.standard
     
     // MARK: UI
     var body: some View {
@@ -63,8 +64,11 @@ struct MainCardView: View {
         .onAppear() {
             if self.selected == 0 {
                 self.weatherVM.fetchWeatherMoscow()
-            } else {
+            } else if self.selected == 1{
                 self.weatherVM.fetchWeatherSaintPetersburg()
+            } else {
+                self.weatherVM.fetchWeather(city: self.weatherVM.city)
+                
             }
         }
     }

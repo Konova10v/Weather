@@ -11,11 +11,13 @@ import SwiftUI
 struct SearchView: View {
     
     // MARK: Parametrs
-    @ObservedObject private var searchWeatherVM: SearchViewModel
-    @State private var city: String = ""
+    @ObservedObject private var searchWeatherVM: CurrentWeatherViewModel
+    @ObservedObject private var daysWeatherVM: DaysWeatherViewModel
+    @State public var city: String = ""
     
-    init(searchWeatherVM: SearchViewModel = SearchViewModel()) {
+    init(searchWeatherVM: CurrentWeatherViewModel = CurrentWeatherViewModel(), daysWeatherVM: DaysWeatherViewModel = DaysWeatherViewModel()) {
         self.searchWeatherVM = searchWeatherVM
+        self.daysWeatherVM = daysWeatherVM
     }
     
     // MARK: UI Search
@@ -23,8 +25,7 @@ struct SearchView: View {
         
         VStack {
             
-            TextField("Search", text: self.$city, onEditingChanged: { _ in }, onCommit: {
-                self.searchWeatherVM.fetchWeather(city: self.city)
+            TextField("Search", text: self.$city, onEditingChanged: { _ in }, onCommit: { self.searchWeatherVM.fetchWeather(city: self.city)
                 
             }).textFieldStyle(RoundedBorderTextFieldStyle())
                
@@ -46,7 +47,7 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         
-        let vm = SearchViewModel()
+        let vm = CurrentWeatherViewModel()
         vm.loadingState = .none
         vm.message = "Unable to load weather"
         
@@ -57,7 +58,8 @@ struct SearchView_Previews: PreviewProvider {
     // MARK: UI Current Weather
 struct WeatherView: View {
     
-    @ObservedObject var searchWeatherVM: SearchViewModel
+    @ObservedObject var searchWeatherVM: CurrentWeatherViewModel
+    @State var showingAlert = false
     
     var body: some View {
         VStack(spacing: 10) {
@@ -84,12 +86,17 @@ struct WeatherView: View {
             .background(Color.white)
             .cornerRadius(100)
             .shadow(radius: 20)
+            .onTapGesture {
+                self.showingAlert = true
+            }
         }
         .padding()
         .frame(width:300, height: 200)
         .background(Color("selected"))
         .clipShape(RoundedRectangle(cornerRadius: 8.0, style: .continuous))
-    
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("City added to main screen"), message: Text(""), dismissButton: .default(Text("OK")))
+        }
     }
 }
 
