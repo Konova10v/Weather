@@ -9,8 +9,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    
-    // MARK: Parametrs
+// MARK: - Parametrs
     @ObservedObject private var searchWeatherVM: CurrentWeatherViewModel
     @ObservedObject private var daysWeatherVM: DaysWeatherViewModel
     @State public var city: String = ""
@@ -20,16 +19,15 @@ struct SearchView: View {
         self.daysWeatherVM = daysWeatherVM
     }
     
-    // MARK: UI Search
+// MARK: - UI Search
     var body: some View {
         
         VStack {
-            
             TextField("Search", text: self.$city, onEditingChanged: { _ in }, onCommit: { self.searchWeatherVM.fetchWeather(city: self.city)
-                
             }).textFieldStyle(RoundedBorderTextFieldStyle())
                
             Spacer()
+            
             if self.searchWeatherVM.loadingState == .loading {
                 LoadingView()
             } else if self.searchWeatherVM.loadingState == .success {
@@ -39,11 +37,11 @@ struct SearchView: View {
             }
             
             Spacer()
-           
         }.padding()
     }
 }
-    // MARK: UI Unable to load
+
+// MARK: - UI Unable to load
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         
@@ -55,9 +53,8 @@ struct SearchView_Previews: PreviewProvider {
     }
 }
 
-    // MARK: UI Current Weather
+// MARK: - UI Current Weather
 struct WeatherView: View {
-    
     @ObservedObject var searchWeatherVM: CurrentWeatherViewModel
     @State var showingAlert = false
     
@@ -100,24 +97,22 @@ struct WeatherView: View {
     }
 }
 
-    // MARK: Loading
+// MARK: - Loading
 struct LoadingView: View {
     var body: some View {
         VStack {
             Text("Loading your weather!")
                 .font(.body)
                 .foregroundColor(Color.white)
-          
         }
         .padding()
         .frame(width:300, height: 150)
         .background(Color.orange)
         .clipShape(RoundedRectangle(cornerRadius: 8.0, style: .continuous))
-    
     }
 }
 
-    // MARK: Error
+// MARK: - Error
 struct ErrorView: View {
     let message: String
     var body: some View {
@@ -125,13 +120,10 @@ struct ErrorView: View {
            Text(message)
                .font(.body)
                .foregroundColor(Color.white)
-         
        }
        .padding()
        .frame(width:300, height: 150)
        .background(Color.red)
        .clipShape(RoundedRectangle(cornerRadius: 8.0, style: .continuous))
-   
    }
 }
-

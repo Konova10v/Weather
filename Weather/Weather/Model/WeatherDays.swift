@@ -10,13 +10,11 @@ import Foundation
 import ObjectMapper
 
 struct TempStructure {
-    
     var dt: Double = 0.0
     var temp: Temp
     var humidity: Int
     var weatherMain: String
     
-
     init(dt: Double, temp: Temp, humidity: Int, weatherMain: String) {
         self.dt = dt
         self.temp = temp
@@ -37,7 +35,6 @@ struct Temp {
 
 // MARK: - Mapper
 class TempStructureMapper: Mappable {
-
     var dt: Double?
     var temp: TempMapper?
     var humidity: Int?
@@ -70,4 +67,3 @@ class TempMapper: Mappable {
         self.tempMax <- map["max"]
     }
 }
-

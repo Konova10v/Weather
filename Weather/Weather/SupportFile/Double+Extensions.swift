@@ -9,7 +9,6 @@
 import Foundation
 
 extension Double {
-    
     func toFahrenheit() -> Double {
         // current temperature is always in Kelvin
         let temperature = Measurement<UnitTemperature>(value: self, unit: .kelvin)

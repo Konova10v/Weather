@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct MainCardView: View {
-    // MARK: Parametrs
+// MARK: - Parametrs
     @Binding var selected: Int
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     let defaults = UserDefaults.standard
     
-    // MARK: UI
+// MARK: - UI
     var body: some View {
         ZStack {
             Image("card-bg")
@@ -68,7 +68,6 @@ struct MainCardView: View {
                 self.weatherVM.fetchWeatherSaintPetersburg()
             } else {
                 self.weatherVM.fetchWeather(city: self.weatherVM.city)
-                
             }
         }
     }

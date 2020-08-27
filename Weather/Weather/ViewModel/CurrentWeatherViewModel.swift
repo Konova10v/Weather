@@ -77,6 +77,7 @@ class CurrentWeatherViewModel: ObservableObject {
         return icon.main
     }
     
+    // данные текщей погоды в Москве
     func fetchWeatherMoscow() {
         WeatherService().getCurrentWeatherMoscow { result in
             switch result {
@@ -90,6 +91,7 @@ class CurrentWeatherViewModel: ObservableObject {
         }
     }
     
+    // данные текщей погоды в Санкт-Петербург
     func fetchWeatherSaintPetersburg() {
         WeatherService().getCurrentWeatherSaintPetersburg { result in
             switch result {
@@ -103,6 +105,7 @@ class CurrentWeatherViewModel: ObservableObject {
         }
     }
     
+    // данные текщей погоды в городе по поиску
     func fetchWeather(city: String) {
         
         guard let city = city.escaped() else {
@@ -132,5 +135,3 @@ class CurrentWeatherViewModel: ObservableObject {
         }
     }
 }
-
-

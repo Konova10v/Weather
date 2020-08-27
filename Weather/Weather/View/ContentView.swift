@@ -8,9 +8,8 @@
 
 import SwiftUI
 
-import SwiftUI
 struct ContentView: View {
-    // MARK: Parametrs
+// MARK: - Parametrs
     @ObservedObject var weatherVM: CurrentWeatherViewModel
     @ObservedObject var daysWeatherVM: DaysWeatherViewModel
     @State var selected = 0
@@ -21,7 +20,7 @@ struct ContentView: View {
     
     var detailSize = CGSize(width: 0, height: UIScreen.main.bounds.height)
     
-    // MARK: UI
+// MARK: - UI
     var body: some View {
         VStack {
             if selected == 0 {
@@ -35,7 +34,7 @@ struct ContentView: View {
             Picker("", selection: $selected) {
                 Text("Moscow").tag(0)
                 Text("Saint Petersburg").tag(1)
-                Text("You City").tag(2)
+                Text("Your City").tag(2)
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding(.horizontal)
@@ -76,7 +75,7 @@ struct ContentView: View {
         .onAppear(perform: loadData)
     }
     
-    // MARK: Functions
+// MARK: - Functions
     private func loadData() {
         self.daysWeatherVM.fetchWeatherMoscow()
         self.daysWeatherVM.fetchWeatherSaintPetersburg()

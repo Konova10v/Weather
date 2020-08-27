@@ -50,6 +50,7 @@ class WeatherService {
             }
         }.resume()
     }
+    
     /// погода в Москве за несколько дней
     public func getMoscowDaysWeather(callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         
@@ -110,6 +111,7 @@ class WeatherService {
         }.resume()
     }
     
+    // погода в добавлеяемом городе на несколько дней
     public func getAddDaysWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees, callback: @escaping (_ meters: [TempStructure]) -> Void ) {
         let url = "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longitude)&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
         
@@ -151,4 +153,3 @@ extension WeatherService {
         return arr
     }
 }
-

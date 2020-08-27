@@ -10,6 +10,7 @@ import Foundation
 import CoreLocation
 
 class DaysWeatherViewModel: ObservableObject {
+// MARK: - Parametrs
     @Published var temperatureUnit: TemperatureUnit = .celsius
     @Published var isVisible: Bool = false
     
@@ -19,18 +20,22 @@ class DaysWeatherViewModel: ObservableObject {
     var longitude: CLLocationDegrees?
     var tempAdd: [TempStructure] = [TempStructure]()
     
+// MARK: - Functions
+    
+    //погода на несколько дней в Москве
     func fetchWeatherMoscow() {
         WeatherService().getMoscowDaysWeather { (temp) in
             self.tempMoscow = temp
         }
     }
     
+    //погода на несколько дней в Санкт-Петербург
     func fetchWeatherSaintPetersburg() {
         WeatherService().getSaintPetersburgDaysWeather { (temp) in
             self.tempSaintPetersburg = temp
         }
     }
-    
+    //погода на несколько дней добавляемом городе
     func fetchAddWeather(city: String) {        
         self.getCoordinateFrom(address: city) { coordinate, error in
             guard let coordinate = coordinate, error == nil else { return }
@@ -46,6 +51,7 @@ class DaysWeatherViewModel: ObservableObject {
     }
 }
 
+// MARK: - Получение координат по названию
 extension DaysWeatherViewModel {
     func getCoordinateFrom(address: String, completion: @escaping(_ coordinate: CLLocationCoordinate2D?, _ error: Error?) -> () ) {
         CLGeocoder().geocodeAddressString(address) { completion($0?.first?.location?.coordinate, $1) }

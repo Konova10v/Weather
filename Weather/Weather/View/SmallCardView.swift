@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct SmallCardView: View {
-    // MARK: Parametrs
+// MARK: - Parametrs
     @State var weathers: TempStructure
     @ObservedObject var daysWeathersVM: DaysWeatherViewModel
     
-    // MARK: UI
+// MARK: - UI
     var body: some View {
         VStack(spacing: 20) {
             getDate()
@@ -42,7 +42,7 @@ struct SmallCardView: View {
         .shadow(color: Color("mainCard").opacity(0.7), radius: 10, x: 0, y: 8)
     }
     
-    // MARK: Functions
+// MARK: - Functions
     func getDate() -> some View {
         var localDate: String = ""
         let timeResult = Double(weathers.dt)
