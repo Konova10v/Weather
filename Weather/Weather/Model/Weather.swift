@@ -2,7 +2,7 @@
 //  Weather.swift
 //  Weather
 //
-//  Created by Кирилл Коновалов on 21.08.2020.
+//  Created by Кирилл Коновалов on 8.10.2020.
 //  Copyright © 2020 Кирилл Коновалов. All rights reserved.
 //
 

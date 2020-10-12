@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Weather
 //
-//  Created by Кирилл Коновалов on 21.08.2020.
+//  Created by Кирилл Коновалов on 8.10.2020.
 //  Copyright © 2020 Кирилл Коновалов. All rights reserved.
 //
 
@@ -26,14 +26,14 @@ struct ContentView: View {
             if selected == 0 {
                 NavBarView(country: "Moscow", showSearch: self.$showSearch)
             } else if selected == 1 {
-                NavBarView(country: "Saint Petersburg", showSearch: self.$showSearch)
+                NavBarView(country: "Minsk", showSearch: self.$showSearch)
             } else {
                 NavBarView(country: "\(weatherVM.city)", showSearch: self.$showSearch)
             }
             
             Picker("", selection: $selected) {
                 Text("Moscow").tag(0)
-                Text("Saint Petersburg").tag(1)
+                Text("Minsk").tag(1)
                 Text("Your City").tag(2)
             }
             .pickerStyle(SegmentedPickerStyle())

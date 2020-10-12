@@ -2,7 +2,7 @@
 //  APICallManager.swift
 //  Weather
 //
-//  Created by Кирилл Коновалов on 21.08.2020.
+//  Created by Кирилл Коновалов on 8.10.2020.
 //  Copyright © 2020 Кирилл Коновалов. All rights reserved.
 //
 
@@ -15,9 +15,10 @@ enum ServerAPI {
     static var baseURL = URL(string: "http://api.openweathermap.org/data/2.5/weather")
     static var apiID = "e9ff8714a0cb2180a4799993010ab13a"
     static var moscow = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=\(ServerAPI.apiID)")
-    static var saintPetersburg = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Saint%20Petersburg&appid=\(ServerAPI.apiID)")
+    static var saintPetersburg = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Minsk&appid=\(ServerAPI.apiID)")
     static var moscowWeatherDay =  "https://api.openweathermap.org/data/2.5/onecall?lat=55.751244&lon=37.618423&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
-    static var saintPetersburgWeatherDay =  "https://api.openweathermap.org/data/2.5/onecall?lat=59.9386&lon=30.3141&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
+    static var saintPetersburgWeatherDay =  "https://api.openweathermap.org/data/2.5/onecall?lat=53.9&lon=27.57&exclude=current,minutely,hourly&appid=\(ServerAPI.apiID)"
+    
 }
 
 enum NetworkError: Error {
